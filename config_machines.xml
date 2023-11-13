@@ -47,7 +47,7 @@
     </module_system>
     <environment_variables>
       <env name="KMP_STACKSIZE">64M</env>
-      <env name="I_MPI_EXTRA_FILESYSTEM_LIST">lustre</env>
+      <env name="I_MPI_EXTRA_FILESYSTEM_FORCE">lustre</env>
       <env name="I_MPI_EXTRA_FILESYSTEM">on</env>
     </environment_variables>
     <resource_limits>
