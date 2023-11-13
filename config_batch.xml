@@ -56,8 +56,8 @@
     <batch_system MACH="betzy" type="slurm">
     <batch_submit>sbatch</batch_submit>
     <submit_args>
-      <argument> --time $JOB_WALLCLOCK_TIME </argument>
-      <argument> --account $PROJECT </argument>
+      <arg flag="--time" name="$JOB_WALLCLOCK_TIME" />
+      <arg flag="--account" name="$PROJECT" />
     </submit_args>
     <directives>
       <directive> --ntasks={{ total_tasks }}</directive>
@@ -85,8 +85,8 @@
     <batch_system MACH="fram" type="slurm">
     <batch_submit>sbatch</batch_submit>
     <submit_args>
-      <argument> --time $JOB_WALLCLOCK_TIME </argument>
-      <argument> --account $PROJECT </argument>
+      <arg flag="--time" name="$JOB_WALLCLOCK_TIME" />
+      <arg flag="--account" name="$PROJECT" />
     </submit_args>
     <directives>
       <directive> --ntasks={{ total_tasks }}</directive>
