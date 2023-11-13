@@ -21,9 +21,6 @@
   <MPICC> mpiicc </MPICC>
   <MPICXX> mpiicpc </MPICXX>
   <MPIFC> mpiifort </MPIFC>
-  <SCC> icc </SCC>
-  <SCXX> icpc </SCXX>
-  <SFC> ifort </SFC>
   <PIO_FILESYSTEM_HINTS>lustre</PIO_FILESYSTEM_HINTS>
   <SLIBS>
     <append>-qmkl=sequential -lnetcdff -lnetcdf</append>
