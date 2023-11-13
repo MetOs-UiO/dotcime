@@ -1,137 +1,16 @@
 <?xml version="1.0"?>
+
 <config_machines version="2.0">
-  <!--
 
-===============================================================
-COMPILER and COMPILERS
-===============================================================
-If a machine supports multiple compilers - then
-- the settings for COMPILERS should reflect the supported compilers
-as a comma separated string
-- the setting for COMPILER should be the default compiler
-(which is one of the values in COMPILERS)
-
-===============================================================
-MPILIB and MPILIBS
-===============================================================
-If a machine supports only one MPILIB is supported - then
-the setting for  MPILIB and MPILIBS should be blank ("")
-If a machine supports multiple mpi libraries (e.g. mpich and openmpi)
-- the settings for MPILIBS should reflect the supported mpi libraries
-as a comma separated string
-
-The default settings for COMPILERS and MPILIBS is blank (in config_machines.xml)
-
-Normally variable substitutions are not made until the case scripts are run, however variables
-of the form $ENV{VARIABLE_NAME} are substituted in create_newcase from the environment
-variable of the same name if it exists.
-
-===============================================================
-PROJECT_REQUIRED
-===============================================================
-A machine may need the PROJECT xml variable to be defined either because it is
-used in some paths, or because it is used to give an account number in the job
-submission script. If either of these are the case, then PROJECT_REQUIRED
-should be set to TRUE for the given machine.
-
-
-mpirun: the mpirun command that will be used to actually launch the model.
-The attributes used to choose the mpirun command are:
-
-mpilib: can either be 'default' the name of an mpi library, or a compiler name so one can choose the mpirun
-based on the mpi library in use.
-
-the 'executable' tag must have arguments required for the chosen mpirun, as well as the executable name.
-
-unit_testing: can be 'true' or 'false'.
-This allows using a different mpirun command to launch unit tests -->
-
-  <machine MACH="betzy">
-    <DESC> BullSequana XH2000 AMD® Epyc™ "Rome" 2.2GHz, 128-way nodes, os is Linux, batch system is SLURM</DESC>
+  <machine MACH="fram">
+    <DESC>Lenovo NeXtScale M5, 32-way nodes, dual 16-core Xeon E5-2683@2.10GHz, 64 GiB per node, os is Linux, batch system iss
+ SLURM</DESC>
     <OS>LINUX</OS>
     <COMPILERS>intel</COMPILERS>
-    <MPILIBS compiler="intel" >openmpi,impi</MPILIBS>
-    <CIME_OUTPUT_ROOT>/cluster/work/users/$USER/noresm</CIME_OUTPUT_ROOT>
+    <MPILIBS>impi</MPILIBS>
+    <CIME_OUTPUT_ROOT>/cluster/work/users/$USER/cesm</CIME_OUTPUT_ROOT>
     <DIN_LOC_ROOT>/cluster/shared/noresm/inputdata</DIN_LOC_ROOT>
-    <DIN_LOC_ROOT_CLMFORC>/cluster/shared/noresm/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
-    <DOUT_S_ROOT>/cluster/work/users/$USER/archive/$CASE</DOUT_S_ROOT>
-    <BASELINE_ROOT>UNSET</BASELINE_ROOT>
-    <CCSM_CPRNC>/cluster/shared/noresm/tools/cprnc/cprnc</CCSM_CPRNC>
-    <GMAKE_J>8</GMAKE_J>
-    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
-    <SUPPORTED_BY>noresmCommunity</SUPPORTED_BY>
-    <MAX_TASKS_PER_NODE>128</MAX_TASKS_PER_NODE>
-    <MAX_MPITASKS_PER_NODE>128</MAX_MPITASKS_PER_NODE>
-    <PROJECT_REQUIRED>TRUE</PROJECT_REQUIRED>
-    <mpirun mpilib="mpi-serial">
-      <executable></executable>
-    </mpirun>
-    <mpirun mpilib="default">
-      <executable>srun</executable>
-    </mpirun>
-    <module_system type="module">
-      <init_path lang="perl">$ENV{LMOD_PKG}/init/perl</init_path>
-      <init_path lang="python">$ENV{LMOD_PKG}/init/env_modules_python.py</init_path>
-      <init_path lang="csh">$ENV{LMOD_PKG}/init/csh</init_path>
-      <init_path lang="sh">$ENV{LMOD_PKG}/init/sh</init_path>
-      <cmd_path lang="perl">$ENV{LMOD_PKG}/libexec/lmod perl</cmd_path>
-      <cmd_path lang="python">$ENV{LMOD_PKG}/libexec/lmod python</cmd_path>
-      <cmd_path lang="sh">module</cmd_path>
-      <cmd_path lang="csh">module</cmd_path>
-      <modules compiler="intel" mpilib="openmpi">
-        <command name="--force purge"></command>
-        <command name="load">StdEnv</command>
-        <command name="use">/cluster/projects/nn9560k/mdeb/extra_mods/modules/all</command>
-        <command name="load">ESMF/8.4.1-iomkl-2021b</command>
-        <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
-        <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
-        <command name="load">PnetCDF/1.12.3-iompi-2021b</command>
-        <command name="load">ParMETIS/4.0.3-iompi-2021b</command>
-      </modules>
-      <modules compiler="intel" mpilib="impi">
-        <command name="--force purge"></command>
-        <command name="load">StdEnv</command>
-        <command name="use">/cluster/projects/nn9560k/mdeb/extra_mods/modules/all</command>
-        <command name="load">ESMF/8.4.1-intel-2021b</command>
-        <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
-        <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
-        <command name="load">PnetCDF/1.12.3-iimpi-2021b</command>
-        <command name="load">ParMETIS/4.0.3-iimpi-2021b</command>
-      </modules>
-    </module_system>
-    <environment_variables>
-      <env name="KMP_STACKSIZE">64M</env>
-      <env name="MKL_DEBUG_CPU_TYPE">5</env>
-      <env name="OMPI_MCA_mpi_leave_pinned">1</env>
-      <env name="OMPI_MCA_btl">self,vader</env>
-      <env name="OMPI_MCA_rmaps_rank_file_physical">1</env>
-      <env name="OMPI_MCA_coll_hcoll_enable">1</env>
-      <env name="OMPI_MCA_coll">^fca</env>
-      <env name="OMPI_MCA_coll_hcoll_priority">95</env>
-      <env name="OMPI_MCA_coll_hcoll_np">8</env>
-      <env name="HCOLL_MAIN_IB">mlx5_0:1</env>
-      <env name="HCOLL_ENABLE_MCAST_ALL">1</env>
-      <env name="ESMFMKFILE">$ENV{EBROOTESMF}/lib/esmf.mk</env>
-      <env name="ESMF_RUNTIME_PROFILE">ON</env>
-      <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
-      <env name="OMPI_222MCA222222_io">ompio</env>
-      <env name="OMPI_MCA_fs_lustre_stripe_size">1048576</env>
-      <env name="OMPI_MCA_fs_lustre_stripe_width">8</env>
-    </environment_variables>
-    <resource_limits>
-      <resource name="RLIMIT_STACK">-1</resource>
-    </resource_limits>
-  </machine>
-
-<machine MACH="fram">
-    <DESC>Lenovo NeXtScale M5, 32-way nodes, dual 16-core Xeon E5-2683@2.10GHz, 64 GiB per node, os is Linux, batch system is SLURM</DESC>
-    <NODENAME_REGEX>$HOSTNAME</NODENAME_REGEX>
-    <OS>LINUX</OS>
-    <COMPILERS>intel</COMPILERS>
-    <MPILIBS>impi, mpi-serial</MPILIBS>
-    <CIME_OUTPUT_ROOT>/cluster/work/users/$USER/noresm</CIME_OUTPUT_ROOT>
-    <DIN_LOC_ROOT>/cluster/shared/noresm/inputdata</DIN_LOC_ROOT>
-    <DIN_LOC_ROOT_CLMFORC>/cluster/shared/noresm/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
+    <DIN_LOC_ROOT_CLMFORC>UNSET</DIN_LOC_ROOT_CLMFORC>
     <DOUT_S_ROOT>/cluster/work/users/$USER/archive/$CASE</DOUT_S_ROOT>
     <BASELINE_ROOT>UNSET</BASELINE_ROOT>
     <CCSM_CPRNC>UNSET</CCSM_CPRNC>
@@ -144,97 +23,32 @@ This allows using a different mpirun command to launch unit tests -->
     <mpirun mpilib="mpi-serial">
       <executable></executable>
     </mpirun>
-    <mpirun mpilib="impi">
-      <executable>mpirun</executable>
-    </mpirun>
-    <module_system type="module">
-      <init_path lang="perl">$ENV{LMOD_PKG}/init/perl</init_path>
-      <init_path lang="python">$ENV{LMOD_PKG}/init/env_modules_python.py</init_path>
-      <init_path lang="csh">$ENV{LMOD_PKG}/init/csh</init_path>
-      <init_path lang="sh">$ENV{LMOD_PKG}/init/sh</init_path>
-      <cmd_path lang="perl">$ENV{LMOD_PKG}/libexec/lmod perl</cmd_path>
-      <cmd_path lang="python">$ENV{LMOD_PKG}/libexec/lmod python</cmd_path>
-      <cmd_path lang="sh">module</cmd_path>
-      <cmd_path lang="csh">module</cmd_path>
-      <modules>
-        <command name="--force purge"></command>
-        <command name="load">StdEnv</command>
-        <command name="use">/cluster/projects/nn9560k/mdeb/extra_mods/modules/all</command>
-        <command name="load">ESMF/8.4.1-intel-2021b</command>
-        <command name="load">CMake/3.21.1-GCCcore-11.2.0</command>
-        <command name="load">Python/3.9.6-GCCcore-11.2.0</command>
-        <command name="load">PnetCDF/1.12.3-iimpi-2021b</command>
-        <command name="load">ParMETIS/4.0.3-iimpi-2021b</command>
-      </modules>
-    </module_system>
-    <environment_variables>
-      <env name="KMP_STACKSIZE">256M</env>
-      <env name="I_MPI_EXTRA_FILESYSTEM_LIST">lustre</env>
-      <env name="I_MPI_EXTRA_FILESYSTEM">on</env>
-      <env name="ESMFMKFILE">$ENV{EBROOTESMF}/lib/esmf.mk</env>
-      <env name="ESMF_LIBDIR">$ENV{EBROOTESMF}/lib</env>
-      <env name="ESMF_RUNTIME_PROFILE">ON</env>
-      <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
-    </environment_variables>
-    <resource_limits>
-      <resource name="RLIMIT_STACK">-1</resource>
-    </resource_limits>
-  </machine>
-
-  <machine MACH="saga">
-    <DESC>Hewlett Packard Enterprise - CentOS Linux release 7.6.1810 (Core)</DESC>
-    <NODENAME_REGEX>$HOSTNAME</NODENAME_REGEX>
-    <OS>LINUX</OS>
-    <COMPILERS>intel</COMPILERS>
-    <MPILIBS>impi</MPILIBS>
-    <CIME_OUTPUT_ROOT>/cluster/work/users/$USER/ctsm</CIME_OUTPUT_ROOT>
-    <DIN_LOC_ROOT>/cluster/shared/noresm/inputdata</DIN_LOC_ROOT>
-    <DIN_LOC_ROOT_CLMFORC>/cluster/shared/noresm/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
-    <DOUT_S_ROOT>/cluster/work/users/$USER/archive/$CASE</DOUT_S_ROOT>
-    <BASELINE_ROOT>UNSET</BASELINE_ROOT>
-    <CCSM_CPRNC>UNSET</CCSM_CPRNC>
-    <GMAKE_J>8</GMAKE_J>
-    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
-    <SUPPORTED_BY>noresmCommunity</SUPPORTED_BY>
-    <MAX_TASKS_PER_NODE>40</MAX_TASKS_PER_NODE>
-    <MAX_MPITASKS_PER_NODE>40</MAX_MPITASKS_PER_NODE>
-    <PROJECT_REQUIRED>TRUE</PROJECT_REQUIRED>
     <mpirun mpilib="default">
       <executable>mpirun</executable>
     </mpirun>
-    <mpirun mpilib="mpi-serial">
-      <executable></executable>
-    </mpirun>
-    <mpirun mpilib="impi">
-      <executable>mpirun</executable>
-    </mpirun>
     <module_system type="module">
-      <init_path lang="python">/cluster/installations/lmod/lmod/init/env_modules_python.py</init_path>
       <init_path lang="perl">/cluster/installations/lmod/lmod/init/perl</init_path>
-      <init_path lang="sh">/cluster/installations/lmod/lmod/init/sh</init_path>
+      <init_path lang="python">/cluster/installations/lmod/lmod/init/env_modules_python.py</init_path>
       <init_path lang="csh">/cluster/installations/lmod/lmod/init/csh</init_path>
+      <init_path lang="sh">/cluster/installations/lmod/lmod/init/sh</init_path>
       <cmd_path lang="perl">/cluster/installations/lmod/lmod/libexec/lmod perl</cmd_path>
       <cmd_path lang="python">/cluster/installations/lmod/lmod/libexec/lmod python</cmd_path>
       <cmd_path lang="sh">module</cmd_path>
       <cmd_path lang="csh">module</cmd_path>
       <modules>
-        <command name="--force purge"></command>
-        <command name="load">StdEnv</command>
-        <command name="load">CMake/3.22.1-GCCcore-11.2.0</command>
-        <command name="load">XML-LibXML/2.0207-GCCcore-11.2.0</command>
-        <command name="load">ESMF/8.2.0-intel-2021b</command>
-      </modules>
+        <command name="use">/cluster/shared/noresm/eb_mods/modules/all/</command>
+      	<command name="load">netCDF-Fortran/4.6.0-iimpi-2022a</command>
+        <command name="load">PnetCDF/1.12.3-iimpi-2022a</command>
+	<command name="load">intel/2022a</command>
+	<command name="load">CMake/3.23.1-GCCcore-11.3.0</command>
+	<command name="load">XML-LibXML/2.0207-GCCcore-11.3.0</command>
+	<command name="load">Subversion/1.14.2-GCCcore-11.3.0</command>
+     </modules>
     </module_system>
     <environment_variables>
-      <env name="LMOD_DISABLE_SAME_NAME_AUTOSWAP">off</env>
-      <env name="KMP_STACKSIZE">256M</env>
-      <env name="I_MPI_EXTRA_FILESYSTEM_FORCE">lustre</env>
-      <env name="I_MPI_DEBUG">6,pid,time,line,file,</env>
+      <env name="KMP_STACKSIZE">64M</env>
+      <env name="I_MPI_EXTRA_FILESYSTEM_LIST">lustre</env>
       <env name="I_MPI_EXTRA_FILESYSTEM">on</env>
-      <env name="ESMFMKFILE">/cluster/software/ESMF/8.2.0-intel-2021b/lib/esmf.mk</env>
-      <env name="ESMF_LIBDIR">/cluster/software/ESMF/8.2.0-intel-2021b/lib</env>
-      <env name="ESMF_RUNTIME_PROFILE">ON</env>
-      <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
     </environment_variables>
     <resource_limits>
       <resource name="RLIMIT_STACK">-1</resource>
@@ -242,3 +56,4 @@ This allows using a different mpirun command to launch unit tests -->
   </machine>
 
 </config_machines>
+
