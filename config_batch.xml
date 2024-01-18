@@ -33,7 +33,7 @@
  jobmin:      The minimum task count required to use this queue. This should only rarely be used to select queues that only use a fraction of a node. This cannot be used in conjuction with nodemin.
  jobmax:      The maximum task count required to use this queue. This should only rarely be used to select queues that only use a fraction of a node. This cannot be used in conjuction with nodemax.
     -->
-  <batch_system type="slurm">
+  <batch_system type="slurm" >
     <batch_query per_job_arg="-j">squeue</batch_query>
     <batch_cancel>scancel</batch_cancel>
     <batch_directive>#SBATCH</batch_directive>
@@ -49,10 +49,9 @@
       <directive> --job-name={{ job_id }}</directive>
       <directive> --nodes={{ num_nodes }}</directive>
       <directive> --ntasks-per-node={{ tasks_per_node }}</directive>
-      <directive> --output={{ job_id }}</directive>
+      <directive> --output={{ job_id }}   </directive>
     </directives>
   </batch_system>
-
     <batch_system MACH="betzy" type="slurm">
     <batch_submit>sbatch</batch_submit>
     <submit_args>
@@ -116,35 +115,4 @@
     </queues>
   </batch_system>
 
-  <batch_system MACH="saga" type="slurm">
-    <batch_submit>sbatch</batch_submit>
-    <submit_args>
-      <arg flag="--time" name="$JOB_WALLCLOCK_TIME" />
-      <arg flag="-p" name="$JOB_QUEUE" />
-      <arg flag="--account" name="$PROJECT" />
-    </submit_args>
-    <directives>
-      <directive> --ntasks={{ total_tasks }}</directive>
-      <directive> --export=ALL</directive>
-      <directive> --switches=1</directive>
-      <directive> --mem-per-cpu=3G</directive>
-    </directives>
-    <directives queue="devel">
-      <directive> --ntasks={{ total_tasks }}</directive>
-      <directive> --export=ALL</directive>
-      <directive> --switches=1</directive>
-      <directive> --qos=devel</directive>
-    </directives>
-    <directives queue="bigmem">
-      <directive> --ntasks={{ total_tasks }}</directive>
-      <directive> --export=ALL</directive>
-      <directive> --switches=1</directive>
-      <directive> --mem-per-cpu=8G</directive>
-    </directives>
-    <queues>
-      <queue walltimemax="02:00:00" nodemin="1" nodemax="64" default="true">normal</queue>
-      <queue walltimemax="00:30:00" nodemin="1" nodemax="2" default="false">devel</queue>
-      <queue walltimemax="50:00:00" nodemin="1" nodemax="8" default="false">bigmem</queue>
-    </queues>
-  </batch_system>
 </config_batch>
